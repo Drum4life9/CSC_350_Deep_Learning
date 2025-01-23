@@ -3,7 +3,6 @@ import torch
 import torchvision
 from torchvision import transforms
 import matplotlib.pyplot as plt
-plt.ion()
 from d2l import torch as d2l
 
 d2l.use_svg_display()
@@ -38,7 +37,7 @@ def text_labels(self, indices):
 def get_dataloader(self, train):
     data = self.train if train else self.val
     return torch.utils.data.DataLoader(data, self.batch_size, shuffle=train,
-                                       num_workers=self.num_workers)
+                                       num_workers=0)
 
 
 X, y = next(iter(data.train_dataloader()))
