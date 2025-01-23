@@ -1,5 +1,6 @@
 import torch
-from torch import nn
+import matplotlib.pyplot as plt
+plt.ion()
 from d2l import torch as d2l
 
 class Data(d2l.DataModule):
