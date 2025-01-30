@@ -36,3 +36,24 @@ class MLP(d2l.Classifier):
 
 model = MLP(num_outputs=10, num_hiddens=256, lr=0.1)
 trainer.fit(model, data)
+
+
+# I'll be coming to you at some point, my programs are not running so answering
+#   these questions is hard :(
+#
+#   Problem 1) This makes the inner hidden layer wider. I ran this using
+#   colab with only 5 epochs instead of 10. 32 num_hiddens produced a validation
+#   accuracy of around .8, while 256 produced one higher than that, even on
+#   epoch 3. For time's sake I'm going to use 32 num_hiddens
+
+#   Problem 2) I used 32 hidden nodes per layer with 2 hidden layers.
+#   After training for 5 epochs, the validation accuracy was still
+#   Hovering around .8, but the validation loss was higher than it was
+#   with only 1 layer. Not sure how that works, but on the 5th epoch the loss
+#   did decrease by a lot.
+
+#   Problem 3) Epochs @ 10 and LR at 1. So far based on the initial few epochs,
+#   The model is doing significantly worse at training loss and val loss, but
+#   accuracy is almost close to 0! Higher numbers create some funky things
+#   going on. LR = .05, the losses and such slowed down descending, but
+#   it will more slowly approach the true value.
