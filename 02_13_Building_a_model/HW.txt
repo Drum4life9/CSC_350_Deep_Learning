@@ -1,0 +1,18 @@
+1) No, it's not necessarily always a good idea to replace missing
+	values with the mean. If we have a variable that is only
+	1 or 0 (for an indicator or flag variable), how can we
+	realistically fill in the value with the mean? We'd get
+	something in between one and 0, which has no meaning in 
+	that context. Maybe we randomize 1 or 0?
+2) Sharing parameters can be a very good idea especially in the
+	case of large models, or models with many different moving
+	modules. If we are trying to identify images of humans
+	looking straight into a camera, we could have two modules
+	that are responsible for things like eye color, eye shape,
+	and other features of the sort (of our eyes). Typically,
+	someone's left isn't drastically different than their 
+	right eye, so by sharing the weights we can train a whole
+	lot less to get desireable results. Also with large models,
+	by sharing weights we can do less work to still get
+	good results by reusing weights in different areas of the
+	model, each of which influence each other.
