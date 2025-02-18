@@ -1,0 +1,51 @@
+1) 7.1.3
+	Translation invariance might not work in some cases, such
+	as if an image is rotated in certain directions. If we're
+	looking for the shape of an eye, it is longer sideways than
+	it is vertically. If we had a network that imployed translation
+	invariance (but maybe not permutation or rotation invariance),
+	then this eyeball example would fall short of being helpful,
+	since there are no eyes that when rotated sideways are still
+	wider in length than in width.
+2) 7.1.4
+	Yes, CNNs could definitely exist for text data. All language
+	doesn't exist inside a bubble, the words I'm writing in this
+	sentence only make sense because of the context of the words
+	coming before them and after them (and involved in the
+	question). It may not make entire sense (some isses could
+	arise) when trying to segment sentences across periods and 
+	other forms of punctuation, since our english convention 
+	typically represents different thoughts across forms of
+	punctuation. Cats are not green. Totally different thought,
+	could definitely throw off a model if it looked at 
+	"forms of punctuation cats are not green" as a translated
+	section of text.
+3) 7.1.5
+	Convolutions at the end of the image have one of two 
+	options, either cut of extend. The square of pixels that the
+	kernel is looking at could be cut short, for example if we 
+	reach the very edge or corner of an image. The edge contains
+	no input data, so this could mess with our model. We could
+	also fill in the edge of the image with an evenly divisble
+	number of pixels so that our size of the squares are an even 
+	divisor of the total number of vertical and horizontal pixels.
+	One way to do this would be to fill them in with completely
+	black pixels (0,0,0), or we could also take the average of 
+	the nearest square and kind of make a blurry edge. Either
+	solution has pros and cons. 
+4) 7.3.1
+	An 8x8 input by adding (0,1) becomes an 8_tall x 9_wide input.
+	Kernel size (3, 5) is of height 3 and width 5
+	Stride (3, 4) is a skip of 3 for height and 4 for width
+	The stride of 4 for width means that since the width in 
+		our kernel is 5, we have a one pixel overlap for our 
+		shifting of the kernel. This means we'll have
+		5 + (5 - (5-4)) * x pixels in total, where x is the
+		number of outputs width-wise, where this total is 
+		not greater than 9 (the width of the input). Similarly, 
+		a kernel height of 3 and stride of 3 means we get 
+		3 + (3 - (3 - 3)) * y pixels in total, where y is the
+		size of the output height and this total does not exceed
+		8 (the height of the input). x = 2, and y = 2, so that both
+		expressions do not exceed their maximum bounds of the input
+		size. So our output is a 2x2 matrix
