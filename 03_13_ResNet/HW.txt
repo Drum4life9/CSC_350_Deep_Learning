@@ -1,0 +1,25 @@
+Question 1)
+    A residual block is the name for the piece of a network that
+    attempts to find the residual (and get f(x) as close to x) as possible
+    to speed up the learning. I'm not exactly sure how or why this makes
+    things easier, maybe we can talk about it in class or after. The
+    inception blocks are a wider form of this, where every branch of the
+    block applies some sort of transformation or convolution before
+    the concatenation.
+
+Question 2)
+    It implements a bottleneck when the number of intermediate channels
+    (or channels inside the structure of a block) are less than the number
+    of input channels. This happens within each block of the network, even
+    though every block takes in c input channels and outputs c channels
+    as well. This makes training easier if b < c, and also serves as the
+    bottleneck because the inner convolution layers are forced to use
+    b/g channels for g groups
+
+Question 3)
+    The transition layer uses average pooling instead of max pooling
+    since there could be a lot of channels with a lot of different
+    sizes of data, so average pooling helps to make sure that the output
+    of data from one layer to another or one block to another does not
+    continue to increase in size, as this would be pointless across many
+    different blocks, we'd end up with data that grows and grows.
