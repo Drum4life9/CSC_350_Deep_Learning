@@ -1,0 +1,36 @@
+Question 1:
+    We talked about a few different things in class. We can
+    certainly tokenize by character, split by word (either
+    via spaces or some other form of punctuation, and we
+    can also use punctuation to split by sentences. We could
+    totally split randomly, however this feels probably
+    not super great
+
+Question 2:
+    We'd have to use many sentences per minibatch sample,
+    which could cause us to run out of data quicker than
+    using something tokenized by words. This also doesn't
+    really help us with the fact that we want to try to
+    predict the next word in a particular sentence given
+    the previous ones, not Predicting the next word of
+    the next sentence. This could potentially be useful,
+    but doesn't sound like what we're looking for.
+
+Question 3:
+    if we're excluding punctuation, our output dimension
+    is going to be a softmax with 26 outputs, one for each
+    letter and its respective probability that it is the
+    letter that comes next. Thanks mobile texting!
+
+Question 4:
+    This hidden state allows us to concisely (and
+    recursively, hence the name) keep track of previous
+    states and make decisions for the next output guessed
+    because of the previous states. These hidden states
+    essentially store data from all previous times that
+    have been concatenated together.
+
+Question 5:
+    Not sure honestly, I didn't see it. Might be the
+    num_steps, since that feels like it would be named
+    to incorporate how many steps backwards we are looking.
