@@ -1,0 +1,16 @@
+Question 1:
+    Certainly not. We could use some sort of encoder (generator) network to produce
+    an image based on an input string, this NN would probably be something we haven't
+    discussed yet. This would have to be something very deep and capable of handling
+    lots of training on images. The decoder could then be a CNN to identify this
+    image, which would consist of a softmax layer output for the number of classes
+    that the image gets generated as. This reminds me very much of two adversarial
+    networks working together to improve both image generation and recognition
+
+
+Question 2:
+    We could do this several ways, I'm sure some are better than others. We could
+    first, randomize it. This likely wouldn't work well, but could get better
+    during training over time. We could also attempt to initialize it similar to
+    the encoder's state, but fill in the gaps either randomly, by average, max, or
+    some other aggregate function method. Not really sure what else we could do.

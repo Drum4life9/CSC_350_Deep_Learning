@@ -1,0 +1,11 @@
+Question 1:
+    A few methods were discussed in the reading, mostly they dealt with
+    something similar to the "early stopping" method of training, where
+    we can employ techniques such as truncation, which simply help to
+    reduce the computational complexity that arises from using too much
+    previous data in backpropagation, which can be a key component in
+    exploding or vanishing gradients. We can also (maybe after each
+    minibatch or few batches) try to keep the weights normalized
+    along with the inputs, so that the variances in the inputs are
+    still taken into consideration, but we try to keep the gradients
+    small.

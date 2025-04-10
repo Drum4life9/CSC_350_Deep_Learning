@@ -1,0 +1,22 @@
+Question 1:
+    To generate proper words, we'd need to adjust the input gate to recognize
+    when the next word (which should almost always come after a space) needs
+    to be a proper word, and switch over to outputting a set of capital letters
+    instead of lowercase ones. Then, the next input in the sequence needs to
+    realize that the last outputted letter was capitalized, so it needs to
+    take into consideration what letter it was in order to form an actual word,
+    but then its output needs to be a lowercase letter. Everything else from
+    there should work fine outputting lowercase words
+
+
+Question 2:
+    For any values of t < t', our reset gate should I think be 0, so that
+    we technically "remember" nothing from the previous states. Once
+    t > t', then we want to start remembering data in order to produce an
+    output based on the data since t', so reset = 1. For the update gate,
+    it should probably be just 1? for t < t', we want to copy the old "null"
+    state (kind of) because we don't want to use any data before t', so if the
+    reset gate is 0 at that point, we can copy a bunch of blank states. Once
+    t > t', we still want something probably close to 1 so that we can still
+    remember the previous states in order to make decent predictions going
+    forward after t'

@@ -1,0 +1,26 @@
+Question 1:
+    Combining different sources isn't too terrible of an idea! Different
+    authors write in different styles and across different contexts, so this
+    can definitely provide variability to the training data to hopefully
+    allow the output to be more fluid and different. There could be several
+    downsides to this however. If we are mixing authors from technical and
+    fantasy genres, this could train fine but predict pretty poorly. If we're
+    talking about some technical concept and then end up spewing out some words
+    relating to Narnia or some other fantasy land, these two concepts and
+    contexts don't make sense together. This could also backfire if our
+    authors tend to write in difference sentence lengths / clarities. A longer
+    paper has room to be a little more vague and then narrow down, whereas
+    shorter papers need to get to the point faster. If this starts happening
+    in the middle of sentences, who knows how this could go.
+
+Question 2:
+    I mean, it seems simple enough to just use a Bidirectional RNN to ingest
+    the input data and produce a vector output with a softmax layer output.
+    We'd maybe need all the different contexts a work could be in, so for "bank"
+    there's "bank" the place, "bank" the river thing, "bank" the verb like
+    "thanks for banking with us", "bank" as to turn , etc. I guess we'd need
+    to come in having these vectors defined (if I'm interpreting the problem
+    correctly), which would be a lot of work for sure... But we might be able
+    to generalize this a little bit. Check the dictionary, find the most common
+    use of a word, then maybe a second and third context, the verb version
+    (because we can always take nouns and verbify then, just like that!).
