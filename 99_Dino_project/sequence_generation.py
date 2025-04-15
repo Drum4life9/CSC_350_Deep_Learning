@@ -42,7 +42,7 @@ def clip(gradients, maxValue):
     for lis in [dWax, dWaa, dWya, db, dby]:
         np.clip(lis, -maxValue, maxValue, out=lis)
 
-    ### END CODE HERE ###
+
 
     gradients = {"dWaa": dWaa, "dWax": dWax, "dWya": dWya, "db": db, "dby": dby}
 
@@ -86,7 +86,6 @@ def clip(gradients, maxValue):
 # print("\n\n")
 
 
-# TODO - Exercise 2 - sample
 def sample(parameters, char_to_ix, seed):
     """
     Sample a sequence of characters according to a sequence of probability distributions output of the RNN
@@ -105,7 +104,6 @@ def sample(parameters, char_to_ix, seed):
     vocab_size = by.shape[0]
     n_a = Waa.shape[1]
 
-    ### TODO - START CODE HERE ###
     # Step 1: Create the a zero vector x that can be used as the one-hot vector
     # Representing the first character (initializing the sequence generation). (≈1 line)
     x = np.zeros((vocab_size, 1))
@@ -155,7 +153,6 @@ def sample(parameters, char_to_ix, seed):
         seed += 1
         counter += 1
 
-    ### END CODE HERE ###
 
     if (counter == 50):
         indices.append(char_to_ix['\n'])
@@ -190,7 +187,6 @@ def sample(parameters, char_to_ix, seed):
 
 
 # 3.1 - Gradient Descent
-# TODO - Exercise 3 - optimize function
 def optimize(X, Y, a_prev, parameters, learning_rate=0.01):
     """
     Execute one step of the optimization to train the model.
@@ -217,8 +213,6 @@ def optimize(X, Y, a_prev, parameters, learning_rate=0.01):
                         dby -- Gradients of output bias vector, of shape (n_y, 1)
     a[len(X)-1] -- the last hidden state, of shape (n_a, 1)
     """
-
-    ### TODO - START CODE HERE ###
 
     # Forward propagate through time
     loss, cache = rnn_forward(X, Y, a_prev, parameters)
@@ -315,17 +309,17 @@ def model(data_x, ix_to_char, char_to_ix, num_iterations=35000, n_a=50, dino_nam
     # Optimization loop
     for j in range(num_iterations):
 
-        ### TODO - START CODE HERE ###
+
 
         # Set the index `idx`
-        idx = j
+        idx = j % len(examples)
 
         # Set the input X
         single_example = examples[idx]
         single_example_chars = [c for c in single_example]
         single_example_ix = [char_to_ix[c] for c in single_example_chars]
-        # single_example_ix.insert(1, None)
-        X = rnn_forward(single_example_ix, single_example_chars, a_prev, parameters)
+
+        X = single_example_ix
 
         # Set the labels Y (see instructions above)
         Y = X[1:] + [char_to_ix["\n"]]
@@ -334,7 +328,6 @@ def model(data_x, ix_to_char, char_to_ix, num_iterations=35000, n_a=50, dino_nam
         # Choose a learning rate of 0.01
         curr_loss, gradients, a_prev = optimize(X, Y, a_prev, parameters)
 
-        ### END CODE HERE ###
 
         # debug statements to aid in correctly forming X, Y
         if verbose and j in [0, len(examples) - 1, len(examples)]:
@@ -367,6 +360,6 @@ def model(data_x, ix_to_char, char_to_ix, num_iterations=35000, n_a=50, dino_nam
 
     return parameters, last_dino_name
 
-parameters, last_name = model(data.split("\n"), ix_to_char, char_to_ix, 22001, verbose = True)
+parameters, last_name = model(data.split("\n"), ix_to_char, char_to_ix, 42001, verbose = True, dino_names = 10)
 print(f"Final name: {last_name}")
 
