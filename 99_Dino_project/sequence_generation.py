@@ -360,6 +360,6 @@ def model(data_x, ix_to_char, char_to_ix, num_iterations=35000, n_a=50, dino_nam
 
     return parameters, last_dino_name
 
-parameters, last_name = model(data.split("\n"), ix_to_char, char_to_ix, 42001, verbose = True, dino_names = 10)
+parameters, last_name = model(data.split("\n"), ix_to_char, char_to_ix, 22001, verbose = True, dino_names = 10)
 print(f"Final name: {last_name}")
 
