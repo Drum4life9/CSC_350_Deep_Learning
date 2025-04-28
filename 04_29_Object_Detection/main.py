@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 import scipy.io
-import scipy.misc
+# import scipy.misc
 import numpy as np
 import pandas as pd
 import PIL
@@ -43,8 +43,8 @@ def yolo_filter_boxes(boxes, box_confidence, box_class_probs, threshold=.6):
     # Step 2: Find the box_classes using the max box_scores, keep track of the corresponding score
     ##(≈ 2 lines)
     # IMPORTANT: set axis to -1
-    box_classes =
-    box_class_scores =
+    box_classes = tf.argmax(box_class_probs, axis=-1)
+    box_class_scores = tf.reduce_max(box_scores, axis=-1)
 
     # Step 3: Create a filtering mask based on "box_class_scores" by using "threshold". The mask should have the
     # same dimension as box_class_scores, and be True for the boxes you want to keep (with probability >= threshold)
@@ -53,9 +53,9 @@ def yolo_filter_boxes(boxes, box_confidence, box_class_probs, threshold=.6):
 
     # Step 4: Apply the mask to box_class_scores, boxes and box_classes
     ## (≈ 3 lines)
-    scores =
-    boxes =
-    classes =
+    scores = [box_scores[i] for i in range(len(box_scores)) if filtering_mask[i]]
+    boxes = [boxes[i] for i in range(len(boxes)) if filtering_mask[i]]
+    classes = [box_classes[i] for i in range(len(box_classes)) if filtering_mask[i]]
     ### END CODE HERE
 
     return scores, boxes, classes
@@ -90,70 +90,70 @@ print("\033[92m All tests passed!\033[0m\n\n")
 # END UNIT TEST
 
 
-# TODO - Exercise 2
-def iou(box1, box2):
-    """Implement the intersection over union (IoU) between box1 and box2
-
-    Arguments:
-    box1 -- first box, list object with coordinates (box1_x1, box1_y1, box1_x2, box_1_y2)
-    box2 -- second box, list object with coordinates (box2_x1, box2_y1, box2_x2, box2_y2)
-    """
-
-    (box1_x1, box1_y1, box1_x2, box1_y2) = box1
-    (box2_x1, box2_y1, box2_x2, box2_y2) = box2
-
-    ### START CODE HERE
-    # Calculate the (yi1, xi1, yi2, xi2) coordinates of the intersection of box1 and box2. Calculate its Area.
-    ##(≈ 7 lines)
-    xi1 =
-    yi1 =
-    xi2 =
-    yi2 =
-    inter_width =
-    inter_height =
-    inter_area =
-
-    # Calculate the Union area by using Formula: Union(A,B) = A + B - Inter(A,B)
-    ## (≈ 3 lines)
-    box1_area =
-    box2_area =
-    union_area =
-
-    # compute the IoU
-    iou =
-    ### END CODE HERE
-
-    return iou
-
-# BEGIN UNIT TEST
-## Test case 1: boxes intersect
-box1 = (2, 1, 4, 3)
-box2 = (1, 2, 3, 4)
-
-print("iou for intersecting boxes = " + str(iou(box1, box2)))
-assert iou(box1, box2) < 1, "The intersection area must be always smaller or equal than the union area."
-assert np.isclose(iou(box1, box2), 0.14285714), "Wrong value. Check your implementation. Problem with intersecting boxes"
-
-## Test case 2: boxes do not intersect
-box1 = (1,2,3,4)
-box2 = (5,6,7,8)
-print("iou for non-intersecting boxes = " + str(iou(box1,box2)))
-assert iou(box1, box2) == 0, "Intersection must be 0"
-
-## Test case 3: boxes intersect at vertices only
-box1 = (1,1,2,2)
-box2 = (2,2,3,3)
-print("iou for boxes that only touch at vertices = " + str(iou(box1,box2)))
-assert iou(box1, box2) == 0, "Intersection at vertices must be 0"
-
-## Test case 4: boxes intersect at edge only
-box1 = (1,1,3,3)
-box2 = (2,3,3,4)
-print("iou for boxes that only touch at edges = " + str(iou(box1,box2)))
-assert iou(box1, box2) == 0, "Intersection at edges must be 0"
-
-print("\033[92m All tests passed!\033[0m\n\n")
-# END UNIT TEST
+# # TODO - Exercise 2
+# def iou(box1, box2):
+#     """Implement the intersection over union (IoU) between box1 and box2
+#
+#     Arguments:
+#     box1 -- first box, list object with coordinates (box1_x1, box1_y1, box1_x2, box_1_y2)
+#     box2 -- second box, list object with coordinates (box2_x1, box2_y1, box2_x2, box2_y2)
+#     """
+#
+#     (box1_x1, box1_y1, box1_x2, box1_y2) = box1
+#     (box2_x1, box2_y1, box2_x2, box2_y2) = box2
+#
+#     ### START CODE HERE
+#     # Calculate the (yi1, xi1, yi2, xi2) coordinates of the intersection of box1 and box2. Calculate its Area.
+#     ##(≈ 7 lines)
+#     xi1 =
+#     yi1 =
+#     xi2 =
+#     yi2 =
+#     inter_width =
+#     inter_height =
+#     inter_area =
+#
+#     # Calculate the Union area by using Formula: Union(A,B) = A + B - Inter(A,B)
+#     ## (≈ 3 lines)
+#     box1_area =
+#     box2_area =
+#     union_area =
+#
+#     # compute the IoU
+#     iou =
+#     ### END CODE HERE
+#
+#     return iou
+#
+# # BEGIN UNIT TEST
+# ## Test case 1: boxes intersect
+# box1 = (2, 1, 4, 3)
+# box2 = (1, 2, 3, 4)
+#
+# print("iou for intersecting boxes = " + str(iou(box1, box2)))
+# assert iou(box1, box2) < 1, "The intersection area must be always smaller or equal than the union area."
+# assert np.isclose(iou(box1, box2), 0.14285714), "Wrong value. Check your implementation. Problem with intersecting boxes"
+#
+# ## Test case 2: boxes do not intersect
+# box1 = (1,2,3,4)
+# box2 = (5,6,7,8)
+# print("iou for non-intersecting boxes = " + str(iou(box1,box2)))
+# assert iou(box1, box2) == 0, "Intersection must be 0"
+#
+# ## Test case 3: boxes intersect at vertices only
+# box1 = (1,1,2,2)
+# box2 = (2,2,3,3)
+# print("iou for boxes that only touch at vertices = " + str(iou(box1,box2)))
+# assert iou(box1, box2) == 0, "Intersection at vertices must be 0"
+#
+# ## Test case 4: boxes intersect at edge only
+# box1 = (1,1,3,3)
+# box2 = (2,3,3,4)
+# print("iou for boxes that only touch at edges = " + str(iou(box1,box2)))
+# assert iou(box1, box2) == 0, "Intersection at edges must be 0"
+#
+# print("\033[92m All tests passed!\033[0m\n\n")
+# # END UNIT TEST
 
 #
 #
