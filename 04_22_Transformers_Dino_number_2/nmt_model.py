@@ -63,10 +63,11 @@ def one_step_attention(a, s_prev):
     """
 
     # Use repeator to repeat s_prev to be of shape (m, Tx, n_s) so that you can concatenate it with all hidden states "a" (≈ 1 line)
-    s_prev = repeator(m, Tx, n_s)(s_prev)
+    #https://keras.io/api/layers/reshaping_layers/repeat_vector/
+    s_prev = repeator(s_prev)
     # Use concatenator to concatenate a and s_prev on the last axis (≈ 1 line)
     # For testing purposes, please list 'a' first and 's_prev' second, in this order.
-    concat = concatenator(a, s_prev)
+    concat = concatenator([a, s_prev])
     # Use densor1 to propagate concat through a small fully-connected neural network to compute the "intermediate energies" variable e. (≈1 lines)
     e = densor1(concat)
     # Use densor2 to propagate e through a small fully-connected neural network to compute the "energies" variable energies. (≈1 lines)
@@ -74,7 +75,7 @@ def one_step_attention(a, s_prev):
     # Use "activator" on "energies" to compute the attention weights "alphas" (≈ 1 line)
     alphas = activator(energies)
     # Use dotor together with "alphas" and "a", in this order, to compute the context vector to be given to the next (post-attention) LSTM-cell (≈ 1 line)
-    context = dotor(alphas)
+    context = dotor([alphas, a])
 
     return context
 
@@ -122,7 +123,7 @@ def modelf(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size=None):
     ### START CODE HERE ###
 
     # Step 1: Define your pre-attention Bi-LSTM. (≈ 1 line)
-    a = Bidirectional(LSTM(n_a, return_state = True))(X)
+    a = Bidirectional(LSTM(n_a, return_sequences = True))(X)
 
     # Step 2: Iterate for Ty steps
     for t in range(Ty):
@@ -132,7 +133,7 @@ def modelf(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size=None):
         # Step 2.B: Apply the post-attention LSTM cell to the "context" vector. (≈ 1 line)
         # Don't forget to pass: initial_state = [hidden state, cell state]
         # Remember: s = hidden state, c = cell state
-        _, s, c = post_activation_LSTM_cell(inputs=context, initial_state=[s0, c])
+        _, s, c = post_activation_LSTM_cell(context, initial_state=[s, c])
 
         # Step 2.C: Apply Dense layer to the hidden state output of the post-attention LSTM (≈ 1 line)
         out = output_layer(s)
@@ -141,7 +142,7 @@ def modelf(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size=None):
         outputs.append(out)
 
     # Step 3: Create model instance taking three inputs and returning the list of outputs. (≈ 1 line)
-    model = Model(inputs=[X, s0, c], outputs=out)
+    model = Model(inputs=[X, s0, c0], outputs=outputs)
 
     ### END CODE HERE ###
 
@@ -228,37 +229,37 @@ modelf_states_test(modelf)
 model = modelf(Tx, Ty, n_a, n_s, len(human_vocab))
 model.summary()
 
-# ## TODO - Exercise 3
-# opt = Adam( Use given parameters in problem description) # Adam(...)
-# model.compile(loss = 'categorical_crossentropy', optimizer = opt, metrics = ['accuracy'] * Ty)
-#
-# # UNIT TESTS
-# assert opt.learning_rate == 0.005, "Set the lr parameter to 0.005"
-# assert opt.beta_1 == 0.9, "Set the beta_1 parameter to 0.9"
-# assert opt.beta_2 == 0.999, "Set the beta_2 parameter to 0.999"
-# assert opt.weight_decay == 0.01, "Set the decay parameter to 0.01"
-# assert model.loss == "categorical_crossentropy", "Wrong loss. Use 'categorical_crossentropy'"
-# assert model.optimizer == opt, "Use the optimizer that you have instantiated"
-#
-# print("\033[92mAll tests passed!")
-#
-# s0 = np.zeros((m, n_s))
-# c0 = np.zeros((m, n_s))
-# outputs = list(Yoh.swapaxes(0,1))
-#
-# model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)
-# model.load_weights('models/model.h5')
-# EXAMPLES = ['3 May 1979', '5 April 09', '21th of August 2016', 'Tue 10 Jul 2007', 'Saturday May 9 2018', 'March 3 2001', 'March 3rd 2001', '1 March 2001']
-# s00 = np.zeros((1, n_s))
-# c00 = np.zeros((1, n_s))
-# for example in EXAMPLES:
-#     source = string_to_int(example, Tx, human_vocab)
-#     #print(source)
-#     source = np.array(list(map(lambda x: to_categorical(x, num_classes=len(human_vocab)), source))).swapaxes(0,1)
-#     source = np.swapaxes(source, 0, 1)
-#     source = np.expand_dims(source, axis=0)
-#     prediction = model.predict([source, s00, c00])
-#     prediction = np.argmax(prediction, axis = -1)
-#     output = [inv_machine_vocab[int(i)] for i in prediction]
-#     print("source:", example)
-#     print("output:", ''.join(output),"\n")
+## TODO - Exercise 3
+opt = Adam( learning_rate = .005, beta_1 = .9, beta_2 = .999, weight_decay = .01)
+model.compile(loss = 'categorical_crossentropy', optimizer = opt, metrics = ['accuracy'] * Ty)
+
+# UNIT TESTS
+assert opt.learning_rate == 0.005, "Set the lr parameter to 0.005"
+assert opt.beta_1 == 0.9, "Set the beta_1 parameter to 0.9"
+assert opt.beta_2 == 0.999, "Set the beta_2 parameter to 0.999"
+assert opt.weight_decay == 0.01, "Set the decay parameter to 0.01"
+assert model.loss == "categorical_crossentropy", "Wrong loss. Use 'categorical_crossentropy'"
+assert model.optimizer == opt, "Use the optimizer that you have instantiated"
+
+print("\033[92mAll tests passed!")
+
+s0 = np.zeros((m, n_s))
+c0 = np.zeros((m, n_s))
+outputs = list(Yoh.swapaxes(0,1))
+
+model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)
+model.load_weights('models/model.h5')
+EXAMPLES = ['3 May 1979', '5 April 09', '21th of August 2016', 'Tue 10 Jul 2007', 'Saturday May 9 2018', 'March 3 2001', 'March 3rd 2001', '1 March 2001']
+s00 = np.zeros((1, n_s))
+c00 = np.zeros((1, n_s))
+for example in EXAMPLES:
+    source = string_to_int(example, Tx, human_vocab)
+    #print(source)
+    source = np.array(list(map(lambda x: to_categorical(x, num_classes=len(human_vocab)), source))).swapaxes(0,1)
+    source = np.swapaxes(source, 0, 1)
+    source = np.expand_dims(source, axis=0)
+    prediction = model.predict([source, s00, c00])
+    prediction = np.argmax(prediction, axis = -1)
+    output = [inv_machine_vocab[int(i)] for i in prediction]
+    print("source:", example)
+    print("output:", ''.join(output),"\n")
