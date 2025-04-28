@@ -49,7 +49,7 @@ def yolo_filter_boxes(boxes, box_confidence, box_class_probs, threshold=.6):
     # Step 3: Create a filtering mask based on "box_class_scores" by using "threshold". The mask should have the
     # same dimension as box_class_scores, and be True for the boxes you want to keep (with probability >= threshold)
     ## (≈ 1 line)
-    filtering_mask = [True if box_class_scores >= threshold else False]
+    filtering_mask = [True if x >= threshold else False for x in box_class_scores]
 
     # Step 4: Apply the mask to box_class_scores, boxes and box_classes
     ## (≈ 3 lines)
